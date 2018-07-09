@@ -274,3 +274,23 @@ class L76GNSS:
                                                       utc_time[0:2], utc_time[2:4], utc_time[4:6])
         else:
             return None
+        
+    def getUTCTuple(self, debug=False):
+        """return UTC date time Tuple to send to the RTC or None when nothing if found"""
+        msg = self._read_message(messagetype='RMC', debug=debug)
+        if msg is not None:
+            utc_time = msg['UTCTime']
+            utc_date = msg['Date']
+
+            return (
+                    2000 + int(utc_date[4:6]),
+                    int(utc_date[2:4]),
+                    int(utc_date[0:2]),
+                    int(utc_time[0:2]),
+                    int(utc_time[2:4]),
+                    int(utc_time[4:6]),
+                    0,  # Micro sec 
+                    None  # TZ
+                )
+        else:
+            return None
